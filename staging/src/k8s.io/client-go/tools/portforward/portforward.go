@@ -359,8 +359,9 @@ func (pf *PortForwarder) handleConnection(conn net.Conn, port ForwardedPort) {
 			errorChan <- fmt.Errorf("error reading from error stream for port %d -> %d: %v", port.Local, port.Remote, err)
 		case len(message) > 0:
 			errorChan <- fmt.Errorf("an error occurred forwarding %d -> %d: %v", port.Local, port.Remote, string(message))
+		default:
+			close(errorChan)
 		}
-		close(errorChan)
 	}()
 
 	// create data stream
